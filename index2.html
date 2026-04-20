@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cổng Thông Tin Giám Sát Hải Quan Điện Tử</title>
+    
+    <link rel="icon" href="anhweb.png" type="image/png">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* ==========================================================================
+           1. CSS VARIABLES TỔNG THỂ
+           ========================================================================== */
+        :root {
+            --pub-bg: #f8f9fa;
+            --pub-text: #333333;
+            --pub-primary: #0a4275;
+            --pub-secondary: #007bff;
+            
+            --sys-bg: #050810;
+            --sys-glass: rgba(10, 16, 30, 0.85);
+            --sys-border: rgba(0, 240, 255, 0.2);
+            --sys-primary: #00f0ff;
+            --sys-success: #00ff88;
+            --sys-danger: #ff0055;
+            --sys-warning: #ffaa00;
+            --sys-text: #e2e8f0;
+            --sys-sidebar: 260px;
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            scroll-behavior: smooth; 
+        }
+        
+        body { 
+            font-family: 'Roboto', sans-serif; 
+            overflow-x: hidden; 
+        }
+
+        /* ==========================================================================
+           2. GIAO DIỆN PUBLIC
+           ========================================================================== */
+        #public-view {
+            width: 100%;
+            background: var(--pub-bg);
+            color: var(--pub-text);
+            transition: opacity 0.5s ease;
+        }
+
+        .pub-header {
+            position: fixed; 
+            top: 0; 
+            width: 100%; 
+            z-index: 100;
+            background: #ffffff; 
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            padding: 15px 50px;
+        }
+
+        .pub-logo { 
+            font-size: 24px; 
+            font-weight: 700; 
+            color: var(--pub-primary); 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+        }
+
+        .pub-logo i { 
+            color: var(--pub-secondary); 
+            font-size: 28px; 
+        }
+
+        .pub-nav { 
+            display: flex; 
+            gap: 30px; 
+            list-style: none; 
+            align-items: center; 
+        }
+
+        .pub-nav a { 
+            text-decoration: none; 
+            color: var(--pub-text); 
+            font-weight: 500; 
+            font-size: 15px; 
+            transition: 0.3s; 
+        }
+
+        .pub-nav a:hover { 
+            color: var(--pub-secondary); 
+        }
+
+        .btn-login-trigger {
+            background: var(--pub-primary); 
+            color: #fff; 
+            padding: 10px 25px;
+            border-radius: 50px; 
+            font-weight: bold; 
+            border: none; 
+            cursor: pointer; 
+            transition: 0.3s;
+        }
+
+        .btn-login-trigger:hover { 
+            background: var(--pub-secondary); 
+            transform: translateY(-2px); 
+            box-shadow: 0 5px 15px rgba(0,123,255,0.3); 
+        }
+
+        .pub-hero {
+            height: 100vh; 
+            padding-top: 80px;
+            background: linear-gradient(rgba(10, 66, 117, 0.8), rgba(10, 66, 117, 0.8)), url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1600&q=80') center/cover;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            text-align: center; 
+            color: #fff;
+        }
+
+        .pub-hero-content { 
+            max-width: 900px; 
+            padding: 0 20px; 
+        }
+
+        .pub-hero h1 { 
+            font-size: 50px; 
+            margin-bottom: 20px; 
+            font-weight: 700; 
+            line-height: 1.2; 
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5); 
+        }
+
+        .pub-hero p { 
+            font-size: 18px; 
+            margin-bottom: 40px; 
+            line-height: 1.6; 
+            opacity: 0.9; 
+        }
+
+        .pub-section { 
+            padding: 80px 10%; 
+        }
+
+        .pub-section-title { 
+            text-align: center; 
+            margin-bottom: 50px; 
+        }
+
+        .pub-section-title h2 { 
+            font-size: 36px; 
+            color: var(--pub-primary); 
+            margin-bottom: 10px; 
+        }
+
+        .pub-section-title p { 
+            color: #666; 
+            font-size: 16px; 
+        }
+
+        .info-grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 30px; 
+        }
+
+        .info-card { 
+            background: #fff; 
+            border-radius: 10px; 
+            padding: 30px; 
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05); 
+            transition: 0.3s; 
+            border-top: 4px solid var(--pub-secondary); 
+        }
+
+        .info-card:hover { 
+            transform: translateY(-10px); 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+        }
+
+        .info-card i { 
+            font-size: 40px; 
+            color: var(--pub-secondary); 
+            margin-bottom: 20px; 
+        }
+
+        .info-card h3 { 
+            font-size: 20px; 
+            margin-bottom: 15px; 
+            color: var(--pub-primary); 
+        }
+
+        .info-card p { 
+            color: #555; 
+            line-height: 1.6; 
+            font-size: 14px; 
+        }
+
+        .pub-footer { 
+            background: var(--pub-primary); 
+            color: #fff; 
+            text-align: center; 
+            padding: 30px; 
+            font-size: 14px; 
+        }
+
+        /* ==========================================================================
+           3. GIAO DIỆN ĐĂNG NHẬP
+           ========================================================================== */
+        #login-modal {
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background: rgba(0,0,0,0.8); 
+            backdrop-filter: blur(8px);
+            z-index: 9999; 
+            display: none; 
+            align-items: center; 
+            justify-content: center;
+        }
+
+        .login-box {
+            background: #111827; 
+            border: 1px solid var(--sys-primary); 
+            border-radius: 15px;
+            padding: 40px; 
+            width: 400px; 
+            text-align: center; 
+            box-shadow: 0 0 40px rgba(0,240,255,0.2);
+            position: relative; 
+            animation: zoomIn 0.3s ease;
+        }
+
+        @keyframes zoomIn { 
+            from { transform: scale(0.9); opacity: 0; } 
+            to { transform: scale(1); opacity: 1; } 
+        }
+
+        .close-login { 
+            position: absolute; 
+            top: 15px; 
+            right: 20px; 
+            color: #fff; 
+            font-size: 20px; 
+            cursor: pointer; 
+        }
+
+        .login-box h2 { 
+            color: #fff; 
+            margin-bottom: 25px; 
+            font-family: 'Orbitron', sans-serif; 
+            letter-spacing: 1px; 
+        }
+
+        .login-input { 
+            width: 100%; 
+            padding: 15px; 
+            margin-bottom: 20px; 
+            border-radius: 8px; 
+            border: 1px solid #374151; 
+            background: #1f2937; 
+            color: #fff; 
+            outline: none; 
+        }
+
+        .login-input:focus { 
+            border-color: var(--sys-primary); 
+        }
+
+        .btn-submit-login { 
+            width: 100%; 
+            padding: 15px; 
+            border-radius: 8px; 
+            border: none; 
+            background: var(--sys-primary); 
+            color: #000; 
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: 0.3s; 
+        }
+
+        .btn-submit-login:hover { 
+            box-shadow: 0 0 15px var(--sys-primary); 
+        }
+
+        /* ==========================================================================
+           4. GIAO DIỆN HỆ THỐNG NỘI BỘ
+           ========================================================================== */
+        #private-view {
+            display: none; 
+            width: 100%; 
+            min-height: 100vh;
+            background: var(--sys-bg); 
+            color: var(--sys-text);
+        }
+
+        .sys-grid-bg {
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            z-index: 0;
+            background: linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px), 
+                        linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 40px 40px; 
+            pointer-events: none;
+        }
+
+        .sys-sidebar {
+            width: var(--sys-sidebar); 
+            height: 100vh; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            z-index: 100;
+            background: rgba(5,8,16,0.95); 
+            border-right: 1px solid var(--sys-border);
+            display: flex; 
+            flex-direction: column; 
+            padding-top: 20px;
+        }
+
+        .sys-brand { 
+            text-align: center; 
+            padding-bottom: 20px; 
+            border-bottom: 1px solid rgba(255,255,255,0.05); 
+        }
+
+        .sys-brand i { 
+            font-size: 35px; 
+            color: var(--sys-primary); 
+            margin-bottom: 10px; 
+            text-shadow: 0 0 10px var(--sys-primary); 
+        }
+
+        .sys-brand h2 { 
+            color: #fff; 
+            font-size: 16px; 
+            font-family: 'Orbitron'; 
+        }
+        
+        .sys-menu { 
+            list-style: none; 
+            margin-top: 20px; 
+            flex: 1; 
+        }
+
+        .sys-item { 
+            padding: 15px 25px; 
+            cursor: pointer; 
+            color: #94a3b8; 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            transition: 0.3s; 
+            border-left: 3px solid transparent; 
+            font-size: 14px; 
+            font-weight: 500;
+        }
+
+        .sys-item:hover { 
+            background: rgba(255,255,255,0.02); 
+            color: #fff; 
+        }
+
+        .sys-item.active { 
+            background: rgba(0,240,255,0.05); 
+            color: var(--sys-primary); 
+            border-left-color: var(--sys-primary); 
+        }
+        
+        .btn-logout { 
+            margin: 20px; 
+            padding: 12px; 
+            background: rgba(255,0,85,0.1); 
+            border: 1px solid var(--sys-danger); 
+            color: var(--sys-danger); 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            transition: 0.3s; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 10px; 
+        }
+
+        .btn-logout:hover { 
+            background: var(--sys-danger); 
+            color: #fff; 
+            box-shadow: 0 0 15px var(--sys-danger); 
+        }
+
+        .sys-main { 
+            margin-left: var(--sys-sidebar); 
+            padding: 30px; 
+            position: relative; 
+            z-index: 10; 
+            min-height: 100vh; 
+        }
+
+        .sys-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 30px; 
+            border-bottom: 1px solid rgba(255,255,255,0.1); 
+            padding-bottom: 15px; 
+        }
+
+        .sys-title { 
+            font-size: 24px; 
+            color: #fff; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+        }
+
+        .sys-clock { 
+            font-family: 'Orbitron'; 
+            font-size: 18px; 
+            color: var(--sys-primary); 
+        }
+
+        .tab-content { 
+            display: none; 
+            animation: fadeUp 0.4s ease forwards; 
+        }
+
+        .tab-content.active { 
+            display: block; 
+        }
+
+        @keyframes fadeUp { 
+            from { opacity: 0; transform: translateY(15px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        .glass-box { 
+            background: var(--sys-glass); 
+            border: 1px solid var(--sys-border); 
+            border-radius: 12px; 
+            padding: 25px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5); 
+            margin-bottom: 25px; 
+        }
+
+        .box-title { 
+            color: #fff; 
+            font-size: 15px; 
+            text-transform: uppercase; 
+            margin-bottom: 20px; 
+            padding-bottom: 10px; 
+            border-bottom: 1px solid rgba(255,255,255,0.05); 
+        }
+        
+        .g-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+        .g-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        
+        .sensor-card { 
+            background: rgba(0,0,0,0.4); 
+            border: 1px solid rgba(255,255,255,0.05); 
+            padding: 20px; 
+            border-radius: 8px; 
+            text-align: center; 
+        }
+
+        .sensor-val { 
+            font-family: 'Orbitron'; 
+            font-size: 40px; 
+            color: #fff; 
+            margin: 10px 0; 
+            font-weight: bold; 
+        }
+
+        .sensor-unit { 
+            font-size: 12px; 
+            color: #64748b; 
+            text-transform: uppercase; 
+        }
+
+        .weight-main { 
+            grid-column: span 3; 
+            border-color: rgba(0,255,136,0.3); 
+        }
+
+        .weight-main .sensor-val { 
+            color: var(--sys-success); 
+            font-size: 60px; 
+            text-shadow: 0 0 20px rgba(0,255,136,0.3); 
+        }
+
+        .cam-frame { 
+            height: 350px; 
+            background: #000; 
+            border: 1px solid #334; 
+            border-radius: 8px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            position: relative; 
+            overflow: hidden; 
+        }
+
+        .cam-laser { 
+            position: absolute; 
+            top:0; 
+            left:0; 
+            width: 100%; 
+            height: 2px; 
+            background: var(--sys-success); 
+            box-shadow: 0 0 20px 5px rgba(0,255,136,0.5); 
+            animation: scan 2s infinite linear; 
+            display: none; 
+        }
+
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            background: rgba(0,0,0,0.3); 
+            text-align: left; 
+        }
+
+        th, td { 
+            padding: 15px; 
+            border-bottom: 1px solid rgba(255,255,255,0.05); 
+            font-size: 14px; 
+        }
+
+        th { 
+            color: var(--sys-primary); 
+            background: rgba(0,240,255,0.05); 
+        }
+
+        .plate-tag { 
+            background: #fff; 
+            color: #000; 
+            padding: 4px 8px; 
+            border-radius: 4px; 
+            font-family: 'Orbitron'; 
+            font-weight: bold; 
+        }
+
+        .sys-input { 
+            width: 100%; 
+            background: rgba(0,0,0,0.6); 
+            border: 1px solid rgba(255,255,255,0.1); 
+            color: #fff; 
+            padding: 12px; 
+            border-radius: 6px; 
+            margin-bottom: 15px; 
+            outline: none; 
+        }
+
+        .sys-input:focus { 
+            border-color: var(--sys-primary); 
+        }
+
+        .sys-btn { 
+            padding: 12px 20px; 
+            border: none; 
+            border-radius: 6px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            color: #fff; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 8px; 
+        }
+
+        .btn-pri { background: var(--sys-primary); color: #000; } 
+        .btn-pri:hover { box-shadow: 0 0 15px var(--sys-primary); }
+        .btn-suc { background: var(--sys-success); color: #000; } 
+        .btn-suc:hover { box-shadow: 0 0 15px var(--sys-success); }
+        .btn-war { background: transparent; border: 1px solid var(--sys-warning); color: var(--sys-warning); }
+        .btn-war:hover { background: var(--sys-warning); color: #000; }
+        
+        .btn-del { 
+            background: rgba(255,0,85,0.1); 
+            border: 1px solid var(--sys-danger); 
+            color: var(--sys-danger); 
+        }
+        
+        .btn-del:hover { 
+            background: var(--sys-danger); 
+            color: #fff; 
+            box-shadow: 0 0 10px var(--sys-danger); 
+        }
+        
+        .scene { 
+            width: 100%; 
+            height: 200px; 
+            perspective: 800px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            margin-top: 15px; 
+            background: rgba(0,0,0,0.3); 
+            border-radius: 8px; 
+            border: 1px dashed rgba(255,255,255,0.1); 
+        }
+
+        /* KHỐI LẬP PHƯƠNG XOAY MƯỢT MÀ LIÊN TỤC BẰNG CSS */
+        .cube { 
+            width: 80px; 
+            height: 80px; 
+            position: relative; 
+            transform-style: preserve-3d; 
+            animation: spinCube 6s infinite linear; 
+            transition: width 0.5s ease, height 0.5s ease; 
+        }
+
+        @keyframes spinCube {
+            0% { transform: rotateX(-15deg) rotateY(0deg); }
+            100% { transform: rotateX(-15deg) rotateY(360deg); }
+        }
+
+        .cube-face { 
+            position: absolute; 
+            width: 100%; 
+            height: 100%; 
+            border: 2px solid var(--sys-primary); 
+            background: rgba(0,240,255,0.1); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 10px; 
+            color: var(--sys-primary); 
+            font-family: 'Orbitron'; 
+        }
+
+        .f-front { transform: translateZ(40px); } 
+        .f-back { transform: rotateY(180deg) translateZ(40px); }
+        .f-right { transform: rotateY(90deg) translateZ(40px); } 
+        .f-left { transform: rotateY(-90deg) translateZ(40px); }
+        .f-top { transform: rotateX(90deg) translateZ(40px); } 
+        .f-bottom { transform: rotateX(-90deg) translateZ(40px); }
+
+        #toast-box { 
+            position: fixed; 
+            bottom: 20px; 
+            right: 20px; 
+            z-index: 10000; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px; 
+        }
+
+        .toast { 
+            background: rgba(10,16,30,0.95); 
+            border-left: 4px solid var(--sys-primary); 
+            color: #fff; 
+            padding: 15px 25px; 
+            border-radius: 5px; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5); 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            animation: slideIn 0.3s forwards; 
+        }
+
+        @keyframes slideIn { 
+            from { transform: translateX(100%); } 
+            to { transform: translateX(0); } 
+        }
+
+        .tag-color { 
+            padding: 3px 8px; 
+            border-radius: 4px; 
+            font-size: 12px; 
+            font-weight: bold; 
+            background: rgba(255,255,255,0.1); 
+            border: 1px solid rgba(255,255,255,0.2); 
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="public-view">
+        <header class="pub-header">
+            <div class="pub-logo">
+                <i class="fa-solid fa-anchor"></i> SmartCustoms VN
+            </div>
+            <nav>
+                <ul class="pub-nav">
+                    <li><a href="#home">Trang Chủ</a></li>
+                    <li><a href="#about">Thông Tin Hải Quan</a></li>
+                    <li><a href="#tech">Công Nghệ</a></li>
+                    <li>
+                        <button class="btn-login-trigger" onclick="openLogin()">
+                            <i class="fa-solid fa-lock"></i> CỔNG NỘI BỘ
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+
+        <section id="home" class="pub-hero">
+            <div class="pub-hero-content">
+                <h1>Hệ Thống Giám Hải quan thông minh</h1>
+                <p>Nền tảng kiểm định tự động ứng dụng Công nghệ Vi điều khiển ESP32, Camera Trí tuệ nhân tạo (ALPR) và Hệ thống Cảm biến đo lường 3D độ chính xác cao.</p>
+                <a href="#about" class="btn-login-trigger" style="display: inline-block; text-decoration: none; padding: 15px 35px; font-size: 16px;">
+                    TÌM HIỂU VỀ QUY TRÌNH HẢI QUAN <i class="fa-solid fa-arrow-down"></i>
+                </a>
+            </div>
+        </section>
+
+        <section id="about" class="pub-section">
+            <div class="pub-section-title">
+                <h2>Quy Định Về Kiểm Tra Hải Quan & Đăng Kiểm</h2>
+                <p>Nắm rõ quy trình để hàng hóa thông quan nhanh chóng, minh bạch</p>
+            </div>
+            
+            <div class="info-grid">
+                <div class="info-card">
+                    <i class="fa-solid fa-scale-unbalanced"></i>
+                    <h3>Kiểm Soát Tải Trọng</h3>
+                    <p>Theo quy định của Bộ GTVT, phương tiện vận tải hàng hóa khi qua trạm kiểm soát phải được cân xác định tải trọng tĩnh hoặc động. Việc chở quá tải trên 10% sẽ bị từ chối thông quan và áp dụng các biện pháp xử phạt hành chính nghiêm ngặt nhằm bảo vệ kết cấu hạ tầng giao thông.</p>
+                </div>
+                <div class="info-card">
+                    <i class="fa-solid fa-truck-ramp-box"></i>
+                    <h3>Quy Định Về Kích Thước</h3>
+                    <p>Hàng hóa xếp trên xe không được vượt quá kích thước bao ngoài của xe. Đặc biệt đối với vận tải container, chiều cao, chiều dài và chiều rộng phải nằm trong khuôn khổ quy chuẩn kỹ thuật quốc gia về chất lượng an toàn kỹ thuật (QCVN).</p>
+                </div>
+                <div class="info-card">
+                    <i class="fa-solid fa-id-card-clip"></i>
+                    <h3>Hồ Sơ Đăng Kiểm</h3>
+                    <p>Mỗi phương tiện lưu thông bắt buộc phải có Giấy chứng nhận Đăng kiểm còn hiệu lực. Hệ thống trạm cân điện tử có quyền truy xuất trực tiếp vào CSDL của Cục Đăng kiểm Việt Nam để đối chiếu tải trọng cho phép với tải trọng thực tế đang chở.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="tech" class="pub-section" style="background: #fff;">
+            <div class="pub-section-title">
+                <h2>Cơ Sở Hạ Tầng Kỹ Thuật</h2>
+                <p>Mô hình số hóa quy trình kiểm tra do nhóm kỹ sư phát triển</p>
+            </div>
+
+            <div style="display: flex; gap: 50px; align-items: center;">
+                <div style="flex: 1;">
+                    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80" alt="Chip ESP32" style="width: 100%; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                </div>
+                <div style="flex: 1;">
+                    <h3 style="color: var(--pub-primary); font-size: 24px; margin-bottom: 20px;">Hệ Thống Thu Thập Dữ Liệu ESP32</h3>
+                    <p style="color: #555; line-height: 1.8; margin-bottom: 20px;">
+                        Hệ thống hoạt động trên nền tảng Vi điều khiển ESP32 Dual-Core, cung cấp khả năng xử lý Real-time và giao tiếp Web Server qua giao thức mạng không dây WiFi. 
+                    </p>
+                    <ul style="list-style: none; color: #555; line-height: 2;">
+                        <li><i class="fa-solid fa-check" style="color: var(--pub-secondary);"></i> <b>Trọng lượng:</b> Đo lường bằng Loadcell giao tiếp qua mạch ADC HX711 24-bit.</li>
+                        <li><i class="fa-solid fa-check" style="color: var(--pub-secondary);"></i> <b>Kích thước 3D:</b> Mạng lưới đa cảm biến siêu âm HC-SR04 xác định tọa độ đa chiều.</li>
+                        <li><i class="fa-solid fa-check" style="color: var(--pub-secondary);"></i> <b>Nhận diện:</b> Tích hợp module ALPR Camera chụp và bóc tách dữ liệu biển số xe.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="pub-footer">
+            <p>&copy; 2026 Bản quyền thuộc về Đồ Án Kỹ Thuật Hệ Thống Giám Sát. Cung cấp giải pháp phần mềm cho Trạm Hải Quan.</p>
+        </footer>
+    </div>
+
+
+    <div id="login-modal">
+        <div class="login-box">
+            <i class="fa-solid fa-xmark close-login" onclick="closeLogin()"></i>
+            <i class="fa-solid fa-shield-halved" style="font-size: 40px; color: var(--sys-primary); margin-bottom: 15px;"></i>
+            <h2>SYSTEM LOGIN</h2>
+            <p style="color: #9ca3af; font-size: 13px; margin-bottom: 20px;">Cổng thông tin quản lý nội bộ dành cho Cán bộ trực trạm.</p>
+            
+            <input type="text" id="admin-user" class="login-input" placeholder="Tài khoản ">
+            <input type="password" id="admin-pass" class="login-input" placeholder="Mật khẩu ">
+            
+            <button class="btn-submit-login" onclick="verifyLogin()">ĐĂNG NHẬP HỆ THỐNG</button>
+        </div>
+    </div>
+
+
+    <div id="private-view">
+        <div class="sys-grid-bg"></div>
+
+        <div class="sys-sidebar">
+            <div class="sys-brand">
+                <i class="fa-solid fa-satellite-dish"></i>
+                <h2>HẢI QUAN ADMIN OS</h2>
+            </div>
+            
+            <ul class="sys-menu">
+                <li class="sys-item active" onclick="switchTab('tab-scan', this)">
+                    <i class="fa-solid fa-radar"></i> Bảng Theo Dõi Trạm Quét
+                </li>
+                <li class="sys-item" onclick="switchTab('tab-db', this)">
+                    <i class="fa-solid fa-database"></i> Cơ Sở Dữ Liệu Đăng Kiểm
+                </li>
+                <li class="sys-item" onclick="switchTab('tab-report', this)">
+                    <i class="fa-solid fa-file-export"></i> Báo Cáo & Trích Xuất
+                </li>
+                <li class="sys-item" onclick="switchTab('tab-config', this)">
+                    <i class="fa-solid fa-gears"></i> Cấu Hình Hardware
+                </li>
+            </ul>
+
+            <button class="btn-logout" onclick="performLogout()">
+                <i class="fa-solid fa-right-from-bracket"></i> ĐĂNG XUẤT
+            </button>
+        </div>
+
+        <div class="sys-main">
+            <div class="sys-header">
+                <div class="sys-title" id="page-title">
+                    <i class="fa-solid fa-radar"></i> Bảng Theo Dõi Trạm Quét
+                </div>
+                <div class="sys-clock" id="live-time">00:00:00</div>
+            </div>
+
+            <div id="tab-scan" class="tab-content active">
+                <div class="g-2">
+                    
+                    <div class="glass-box">
+                        <div class="box-title">
+                            <i class="fa-solid fa-camera-retro"></i> Hệ Thống Camera Nhận Diện Biển Số
+                        </div>
+                        
+                        <div class="cam-frame">
+                            <div class="cam-laser" id="ai-laser"></div>
+                            <img id="ai-video-stream" src="http://127.0.0.1:5000/video_feed" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;" onerror="this.style.display='none'; document.getElementById('offline-msg').style.display='block';">
+                            <div id="offline-msg" style="text-align: center; color: #475569; display: none;">
+                                <i class="fa-solid fa-video-slash" style="font-size: 40px; margin-bottom: 10px;"></i><br>Stream Offline
+                            </div>
+                        </div>
+
+                        <div class="g-2" style="margin-top: 15px;">
+                            <div style="border: 1px dashed rgba(255,255,255,0.2); padding: 15px; border-radius: 8px; text-align: center;">
+                                <div class="sensor-unit">Kết quả bóc tách (OCR)</div>
+                                <div style="font-family: 'Orbitron'; font-size: 24px; color: var(--sys-warning); margin-top: 5px;" id="ai-plate-res">----</div>
+                                <div style="font-size: 13px; color: #94a3b8; margin-top: 8px;" id="ai-color-res">
+                                    Màu Xe: <b>--</b> | Màu Biển: <b>--</b>
+                                </div>
+                            </div>
+                            <div style="border: 1px dashed rgba(255,255,255,0.2); padding: 15px; border-radius: 8px; text-align: center; display: flex; align-items: center; justify-content: center;">
+                                <div id="ai-status-res" style="color: #64748b; font-size: 14px;">Chờ tín hiệu xe...</div>
+                            </div>
+                        </div>
+                        <button class="sys-btn btn-war" style="width: 100%; margin-top: 15px;" onclick="demoAIScan()">
+                            Giả Lập Tín Hiệu Camera Trúng Xe
+                        </button>
+                    </div>
+
+                    <div class="glass-box">
+                        <div class="box-title">
+                            <i class="fa-solid fa-microchip"></i> Thu Thập Số Liệu
+                        </div>
+                        
+                        <div class="g-3">
+                            <div class="sensor-card weight-main">
+                                <div class="sensor-unit">Tải Trọng Tịnh</div>
+                                <div class="sensor-val" id="val_weight">0</div>
+                                <div class="sensor-unit">Gram</div>
+                            </div>
+                            <div class="sensor-card">
+                                <div class="sensor-unit">Dài (X)</div>
+                                <div class="sensor-val" style="font-size:30px;" id="val_dai">0</div>
+                                <div class="sensor-unit">cm</div>
+                            </div>
+                            <div class="sensor-card">
+                                <div class="sensor-unit">Rộng (Y)</div>
+                                <div class="sensor-val" style="font-size:30px;" id="val_rong">0</div>
+                                <div class="sensor-unit">cm</div>
+                            </div>
+                            <div class="sensor-card">
+                                <div class="sensor-unit">Cao (Z)</div>
+                                <div class="sensor-val" style="font-size:30px;" id="val_cao">0</div>
+                                <div class="sensor-unit">cm</div>
+                            </div>
+                        </div>
+
+                        <div class="scene">
+                            <div class="cube" id="render-box">
+                                <div class="cube-face f-front">FRONT</div>
+                                <div class="cube-face f-back">BACK</div>
+                                <div class="cube-face f-right">RIGHT</div>
+                                <div class="cube-face f-left">LEFT</div>
+                                <div class="cube-face f-top">TOP</div>
+                                <div class="cube-face f-bottom">BOTTOM</div>
+                            </div>
+                        </div>
+
+                        <div class="g-2" style="margin-top: 20px;">
+                            <button class="sys-btn btn-suc" onclick="logInspectionManual()">
+                                <i class="fa-solid fa-floppy-disk"></i> LƯU KẾT QUẢ ĐO
+                            </button>
+                            <button class="sys-btn btn-war" onclick="tareScaleFromWeb()">
+                                <i class="fa-solid fa-scale-balanced"></i> ZERO / TARE CÂN
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-db" class="tab-content">
+                <div class="glass-box">
+                    <div class="box-title">
+                        <i class="fa-solid fa-folder-plus"></i> Nhập Liệu Hồ Sơ Quốc Gia
+                    </div>
+                    <div class="g-3" style="align-items: end; margin-bottom: 15px;">
+                        <div>
+                            <div class="sensor-unit" style="margin-bottom:8px;">Biển Số Định Danh</div>
+                            <input type="text" class="sys-input" id="db-p" placeholder="Ví dụ: 29A-123.45">
+                        </div>
+                        <div>
+                            <div class="sensor-unit" style="margin-bottom:8px;">Tên Chủ Xe</div>
+                            <input type="text" class="sys-input" id="db-owner" placeholder="Ví dụ: Nguyễn Văn A">
+                        </div>
+                        <div>
+                            <div class="sensor-unit" style="margin-bottom:8px;">Màu Sắc Biển Số</div>
+                            <input type="text" class="sys-input" id="db-plate-color" placeholder="Ví dụ: Trắng, Vàng, Xanh...">
+                        </div>
+                        <div>
+                            <div class="sensor-unit" style="margin-bottom:8px;">Màu Sắc Xe</div>
+                            <input type="text" class="sys-input" id="db-car-color" placeholder="Ví dụ: Trắng, Đen, Đỏ...">
+                        </div>
+                        <div>
+                            <div class="sensor-unit" style="margin-bottom:8px;">Loại Phương Tiện</div>
+                            <input type="text" class="sys-input" id="db-t" placeholder="Ví dụ: Xe tải nhẹ">
+                        </div>
+                        <div>
+                            <div class="sensor-unit" style="margin-bottom:8px;">Tải Trọng Cho Phép (g)</div>
+                            <input type="number" class="sys-input" id="db-w" placeholder="Khối lượng tối đa">
+                        </div>
+                        <div>
+                            <button class="sys-btn btn-pri" style="width: 100%; height: 43px; margin-bottom: 15px;" onclick="addVehicleDB()">
+                                <i class="fa-solid fa-plus"></i> LƯU HỒ SƠ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-box">
+                    <div class="box-title">
+                        <i class="fa-solid fa-table"></i> Danh Sách Lưu Trữ (Lưu tự động)
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>Biển Số Xe</th>
+                                <th>Tên Chủ Xe</th>
+                                <th>Màu Biển</th>
+                                <th>Màu Xe</th>
+                                <th>Loại Xe</th>
+                                <th>Tải Trọng Cho Phép</th>
+                                <th>Tình Trạng</th>
+                                <th>Thao Tác</th> 
+                            </tr>
+                        </thead>
+                        <tbody id="db-table-body">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="tab-report" class="tab-content">
+                <div class="glass-box">
+                    <div class="box-title">
+                        <i class="fa-solid fa-file-csv"></i> Trích Xuất File Báo Cáo 
+                    </div>
+                    <p style="color: #94a3b8; font-size: 14px; margin-bottom: 20px;">Trích xuất toàn bộ dữ liệu đo đạc cảm biến và nhận diện.</p>
+                    <button class="sys-btn btn-suc" onclick="exportCSVData()" style="display: inline-flex; margin-right: 15px;">
+                        <i class="fa-solid fa-download"></i> XUẤT DỮ LIỆU (.CSV)
+                    </button>
+                    <button class="sys-btn btn-war" onclick="clearLogs()" style="display: inline-flex;">
+                        <i class="fa-solid fa-trash"></i> XÓA BỘ NHỚ LOGS
+                    </button>
+                </div>
+
+                <div class="glass-box">
+                    <div class="box-title">
+                        <i class="fa-solid fa-clock-rotate-left"></i> Nhật Ký Kiểm Định Tự Động 
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Thời Gian</th>
+                                <th>Biển Số Quét</th>
+                                <th>Màu Biển</th>
+                                <th>Màu Xe</th>
+                                <th>Trạng Thái Đối Chiếu</th>
+                                <th>Khối Lượng Đo</th>
+                                <th>Kích Thước (DxRxC)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="log-table-body">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="tab-config" class="tab-content">
+                <div class="g-2">
+                    <div class="glass-box">
+                        <div class="box-title">
+                            <i class="fa-solid fa-wrench"></i> Hiệu Chuẩn Phần Cứng (Hardware Calibration)
+                        </div>
+                        <div class="sensor-unit" style="margin-bottom: 10px;">
+                            Hệ số hiệu chuẩn
+                        </div>
+                        <input type="number" class="sys-input" value="-1157.0">
+                        
+                        <div class="sensor-unit" style="margin-bottom: 10px; margin-top: 10px;">
+                            Giới hạn tải báo động (Overweight Limit) - Gram
+                        </div>
+                        <input type="number" class="sys-input" value="200">
+
+                        <button class="sys-btn btn-pri" style="width: 100%; margin-top: 10px;" onclick="popToast('Đã lưu dữ liệu xuống EEPROM ESP32!', 'suc')">
+                            LƯU CẤU HÌNH XUỐNG ROM
+                        </button>
+                    </div>
+
+                    <div class="glass-box">
+                        <div class="box-title">
+                            <i class="fa-solid fa-road-barrier"></i> Điều Khiển Barie 
+                        </div>
+                        <p style="color: #94a3b8; font-size: 13px; margin-bottom: 20px;">Trạng thái đóng/mở.</p>
+                        
+                        <div class="g-3">
+                            <button class="sys-btn btn-pri" onclick="setServoFromWeb('auto')">
+                                <i class="fa-solid fa-robot"></i> TỰ ĐỘNG
+                            </button>
+                            <button class="sys-btn btn-suc" onclick="setServoFromWeb('open')">
+                                <i class="fa-solid fa-arrow-up"></i> MỞ 
+                            </button>
+                            <button class="sys-btn btn-del" onclick="setServoFromWeb('close')">
+                                <i class="fa-solid fa-arrow-down"></i> ĐÓNG 
+                            </button>
+                        </div>
+                        
+                        <div class="sensor-unit" style="margin-top: 25px; border-top: 1px solid rgba(255,255,255,0.05); padding-top:15px;">
+                            <i class="fa-solid fa-wifi" style="color: var(--sys-primary); width: 25px;"></i> Trạng Thái: <span style="color: var(--sys-success);">Online</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div> 
+    
+    <div id="toast-box"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+    <script>
+        /* ==================================================================
+           CẤU HÌNH FIREBASE (Vui lòng điền config của bạn tại đây)
+           ================================================================== */
+        const firebaseConfig = {
+            databaseURL: "https://smartcustoms-3161b-default-rtdb.firebaseio.com"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        /* ------------------------------------------------------------------
+           HÀM ĐIỀU KHIỂN ESP32 QUA FIREBASE (NEW)
+           ------------------------------------------------------------------ */
+        function tareScaleFromWeb() {
+            // Gửi giá trị 1 lên tare_cmd. ESP32 sẽ thực hiện Zero và tự động reset biến này về 0
+            database.ref('control/tare_cmd').set(1)
+            .then(() => popToast('Đã gửi lệnh Zero Cân!', 'suc'))
+            .catch(() => popToast('Lỗi gửi lệnh điều khiển', 'err'));
+        }
+
+        function setServoFromWeb(mode) {
+            // mode: "auto", "open", "close"
+            database.ref('control/servo_mode').set(mode)
+            .then(() => {
+                let msg = mode === 'auto' ? 'Đã bật chế độ Barie Tự động' : (mode === 'open' ? 'Đã MỞ' : 'Đã ĐÓNG');
+                popToast(msg, 'suc');
+            })
+            .catch(() => popToast('Lỗi điều khiển Servo', 'err'));
+        }
+
+        /* ==================================================================
+           HÀM QUẢN LÝ GIAO DIỆN & TRẠNG THÁI
+           ================================================================== */
+        function resetDashboardUI() {
+            currW = 0; 
+            currD = 0; 
+            currR = 0; 
+            currC = 0;
+            aiTargetPlate = "----"; 
+            aiTargetCarColor = "--"; 
+            aiTargetPlateColor = "--";
+            aiTargetDBStatus = "HỢP LỆ";
+
+            document.getElementById('val_weight').innerText = "0";
+            document.getElementById('val_dai').innerText = "0";
+            document.getElementById('val_rong').innerText = "0";
+            document.getElementById('val_cao').innerText = "0";
+
+            let wBox = document.querySelector('.weight-main');
+            wBox.style.background = ''; 
+            wBox.style.borderColor = 'rgba(0,255,136,0.3)';
+            wBox.querySelector('.sensor-val').style.color = 'var(--sys-success)';
+
+            let box = document.getElementById('render-box');
+            box.style.width = '80px'; 
+            box.style.height = '80px';
+
+            document.getElementById('ai-plate-res').innerText = "----";
+            document.getElementById('ai-color-res').innerHTML = `Màu Xe: <b>--</b> | Màu Biển: <b>--</b>`;
+            
+            let statBox = document.getElementById('ai-status-res');
+            statBox.innerHTML = `Chờ tín hiệu xe...`;
+            statBox.style.color = '#64748b';
+        }
+
+        window.addEventListener('beforeunload', function (e) {
+            database.ref('sensor').set({ nang: 0, dai: 0, rong: 0, cao: 0 });
+        });
+
+        /* ------------------------------------------------------------------
+           QUẢN LÝ VIEW: CÔNG KHAI (PUBLIC) <-> NỘI BỘ (PRIVATE)
+           ------------------------------------------------------------------ */
+        function openLogin() { 
+            document.getElementById('login-modal').style.display = 'flex'; 
+        }
+        
+        function closeLogin() { 
+            document.getElementById('login-modal').style.display = 'none'; 
+        }
+
+        function verifyLogin() {
+            let u = document.getElementById('admin-user').value;
+            let p = document.getElementById('admin-pass').value;
+            
+            if(u === 'admin' && p === '123456') {
+                closeLogin();
+                document.getElementById('public-view').style.display = 'none';
+                document.getElementById('private-view').style.display = 'block';
+                startClock();
+                popToast('Đăng nhập Hệ thống Giám sát thành công!', 'suc');
+            } else {
+                alert('Sai tài khoản hoặc mật khẩu!');
+            }
+        }
+
+        function performLogout() {
+            if(confirm("Bạn có chắc muốn đăng xuất khỏi hệ thống không?")) {
+                document.getElementById('private-view').style.display = 'none';
+                document.getElementById('public-view').style.display = 'block';
+                document.getElementById('admin-user').value = "";
+                document.getElementById('admin-pass').value = "";
+                window.scrollTo(0,0);
+            }
+        }
+
+        /* ------------------------------------------------------------------
+           ĐIỀU HƯỚNG TAB
+           ------------------------------------------------------------------ */
+        function switchTab(tabId, el) {
+            document.querySelectorAll('.sys-item').forEach(i => {
+                i.classList.remove('active');
+            });
+            el.classList.add('active');
+
+            document.querySelectorAll('.tab-content').forEach(c => {
+                c.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+
+            let titleHtml = el.innerHTML;
+            document.getElementById('page-title').innerHTML = titleHtml;
+            window.scrollTo(0,0);
+        }
+
+        function startClock() {
+            setInterval(() => {
+                let d = new Date();
+                document.getElementById('live-time').innerText = d.toLocaleTimeString('vi-VN', {hour12: false});
+            }, 1000);
+        }
+
+        function popToast(msg, type) {
+            let box = document.getElementById('toast-box');
+            let t = document.createElement('div');
+            let color = type === 'suc' ? 'var(--sys-success)' : 'var(--sys-danger)';
+            let icon = type === 'suc' ? '<i class="fa-solid fa-check-circle"></i>' : '<i class="fa-solid fa-triangle-exclamation"></i>';
+            
+            t.className = 'toast';
+            t.style.borderLeftColor = color;
+            t.innerHTML = `<span style="color:${color}; font-size: 18px;">${icon}</span> ${msg}`;
+            
+            box.appendChild(t);
+            setTimeout(() => { 
+                t.style.opacity = '0'; 
+                setTimeout(()=> t.remove(), 300); 
+            }, 3000);
+        }
+
+        /* ------------------------------------------------------------------
+           LOGIC CƠ SỞ DỮ LIỆU ĐĂNG KIỂM
+           ------------------------------------------------------------------ */
+        let registryDB = [];
+
+        function loadDB() {
+            let storedDB = localStorage.getItem('registryDB');
+            if (storedDB) {
+                registryDB = JSON.parse(storedDB);
+            } else {
+                registryDB = [ 
+                    { plate: '30F-999.99', owner: 'Công ty Vận tải Logis', type: 'Container 20ft', maxW: 250, carColor: 'Xanh Đậm', plateColor: 'Trắng' },
+                    { plate: '29A-123.45', owner: 'Nguyễn Văn A', type: 'Xe Tải Nhẹ', maxW: 100, carColor: 'Bạc', plateColor: 'Vàng' }
+                ];
+                saveDB();
+            }
+            renderDBTable();
+        }
+
+        function saveDB() {
+            localStorage.setItem('registryDB', JSON.stringify(registryDB));
+        }
+
+        function renderDBTable() {
+            let tbody = document.getElementById('db-table-body');
+            tbody.innerHTML = "";
+            registryDB.forEach((car, index) => {
+                let row = `<tr>
+                    <td>${index + 1}</td>
+                    <td><span class="plate-tag">${car.plate}</span></td>
+                    <td style="font-weight: 500;">${car.owner || "Chưa rõ"}</td>
+                    <td><span class="tag-color">${car.plateColor}</span></td>
+                    <td><span class="tag-color">${car.carColor}</span></td>
+                    <td>${car.type}</td>
+                    <td>${car.maxW} g</td>
+                    <td style="color:var(--sys-success);">Hợp lệ</td>
+                    <td>
+                        <button class="sys-btn btn-del" style="padding: 6px 12px; font-size: 12px;" onclick="deleteVehicleDB(${index})">
+                            <i class="fa-solid fa-trash"></i> Xoá
+                        </button>
+                    </td>
+                </tr>`;
+                tbody.insertAdjacentHTML('beforeend', row);
+            });
+        }
+
+        function addVehicleDB() {
+            let p = document.getElementById('db-p').value.toUpperCase();
+            let o = document.getElementById('db-owner').value || "Chưa rõ";
+            let pColor = document.getElementById('db-plate-color').value || "Chưa rõ";
+            let cColor = document.getElementById('db-car-color').value || "Chưa rõ";
+            let t = document.getElementById('db-t').value;
+            let w = document.getElementById('db-w').value;
+
+            if(!p || !w) return popToast('Lỗi: Cần nhập Biển số và Tải trọng!', 'err');
+
+            registryDB.push({ plate: p, owner: o, plateColor: pColor, carColor: cColor, type: t, maxW: parseInt(w) });
+            saveDB();
+            renderDBTable();
+            
+            document.getElementById('db-p').value = ""; 
+            document.getElementById('db-owner').value = "";
+            document.getElementById('db-plate-color').value = "";
+            document.getElementById('db-car-color').value = "";
+            document.getElementById('db-t').value = ""; 
+            document.getElementById('db-w').value = "";
+            
+            popToast('Đã lưu phương tiện vào Hệ thống Đăng kiểm!', 'suc');
+        }
+
+        function deleteVehicleDB(index) {
+            let carPlate = registryDB[index].plate;
+            if(confirm(`Hành động này sẽ xoá phương tiện ${carPlate} khỏi CSDL. Bạn có chắc chắn không?`)) {
+                registryDB.splice(index, 1);
+                saveDB(); 
+                renderDBTable(); 
+                popToast(`Đã xoá thành công xe ${carPlate}`, 'suc');
+            }
+        }
+
+        /* ------------------------------------------------------------------
+           LOGIC GIAO TIẾP FIREBASE (THAY THẾ FETCH BẰNG LISTENER REALTIME)
+           ------------------------------------------------------------------ */
+        let currW = 0, currD = 0, currR = 0, currC = 0;
+
+        database.ref('sensor').on('value', (snapshot) => {
+            const d = snapshot.val();
+            if(!d) return; 
+            
+            currW = d.nang || 0; 
+            currD = d.dai || 0; 
+            currR = d.rong || 0; 
+            currC = d.cao || 0;
+            
+            document.getElementById('val_weight').innerText = currW;
+            document.getElementById('val_dai').innerText = currD;
+            document.getElementById('val_rong').innerText = currR;
+            document.getElementById('val_cao').innerText = currC;
+
+            let wBox = document.querySelector('.weight-main');
+            if(currW > 200) {
+                wBox.style.background = 'rgba(255,0,85,0.1)'; 
+                wBox.style.borderColor = 'var(--sys-danger)';
+                wBox.querySelector('.sensor-val').style.color = 'var(--sys-danger)';
+            } else {
+                wBox.style.background = ''; 
+                wBox.style.borderColor = 'rgba(0,255,136,0.3)';
+                wBox.querySelector('.sensor-val').style.color = 'var(--sys-success)';
+            }
+
+            let box = document.getElementById('render-box');
+            if(currW > 0 || currD > 0) {
+                let pxW = Math.max(40, currD * 2);
+                let pxH = Math.max(40, currC * 2);
+                box.style.width = pxW + 'px';
+                box.style.height = pxH + 'px';
+            } else {
+                box.style.width = '80px'; 
+                box.style.height = '80px';
+            }
+        });
+
+        /* ------------------------------------------------------------------
+           LOGIC LƯU NHẬT KÝ ĐO LƯỜNG VÀ XUẤT CSV BÁO CÁO
+           ------------------------------------------------------------------ */
+        let reportLogs = []; 
+        let todayStr = new Date().toLocaleDateString('vi-VN');
+
+        function loadDailyReports() {
+            let storedData = localStorage.getItem('dailyReports');
+            if(storedData) {
+                let parsed = JSON.parse(storedData);
+                if(parsed.date === todayStr) {
+                    reportLogs = parsed.logs;
+                } else {
+                    reportLogs = [];
+                    saveDailyReports();
+                }
+            }
+            renderLogTable();
+        }
+
+        function saveDailyReports() {
+            localStorage.setItem('dailyReports', JSON.stringify({
+                date: todayStr,
+                logs: reportLogs
+            }));
+        }
+
+        function renderLogTable() {
+            let tbody = document.getElementById('log-table-body');
+            tbody.innerHTML = "";
+            
+            let reversedLogs = [...reportLogs].reverse();
+            reversedLogs.forEach(log => {
+                let statusHtml = log.status === "ĐẠT CHUẨN" 
+                                 ? `<span style="color:var(--sys-success); font-weight:bold;">ĐẠT CHUẨN</span>` 
+                                 : `<span style="color:var(--sys-danger); font-weight:bold;">${log.status}</span>`;
+                let wHtml = `<span style="color:${log.weight > 200 ? 'var(--sys-danger)' : 'var(--sys-success)'}; font-weight:bold;">${log.weight} g</span>`;
+                
+                let row = `<tr>
+                    <td>${log.time}</td>
+                    <td><span class="plate-tag">${log.plate}</span></td>
+                    <td><span class="tag-color">${log.plateColor}</span></td>
+                    <td><span class="tag-color">${log.carColor}</span></td>
+                    <td>${statusHtml}</td>
+                    <td>${wHtml}</td>
+                    <td>${log.dims}</td>
+                </tr>`;
+                tbody.insertAdjacentHTML('beforeend', row);
+            });
+        }
+
+        function autoLogInspection(plate, carColor, plateColor, dbStatus, maxW) {
+            let isRecentlyLogged = reportLogs.some(log => 
+                log.plate === plate && 
+                (Date.now() - new Date('1970/01/01 ' + log.time).getTime() < 10000)
+            );
+            if(isRecentlyLogged) return;
+
+            let t = new Date().toLocaleTimeString('vi-VN');
+            let isOver = currW > maxW; 
+            
+            let finalStatusArr = [];
+            if(isOver) finalStatusArr.push("VƯỢT TẢI");
+            if(dbStatus !== "HỢP LỆ") finalStatusArr.push(dbStatus);
+            let finalStatusStr = finalStatusArr.length > 0 ? finalStatusArr.join(" & ") : "ĐẠT CHUẨN";
+
+            reportLogs.push({
+                time: t, plate: plate, plateColor: plateColor, 
+                carColor: carColor, status: finalStatusStr, 
+                weight: currW, dims: `${currD}x${currR}x${currC}`
+            });
+            
+            saveDailyReports(); 
+            renderLogTable();
+            popToast(`Đã tự động lưu ngầm nhật ký xe: ${plate}`, 'suc');
+        }
+
+        function logInspectionManual() {
+            if(currentScanPlate === "" || currentScanPlate === "----") {
+                return popToast('Hệ thống chưa có dữ liệu xe để lưu!', 'err');
+            }
+            let searchPlate = currentScanPlate.replace(/[^A-Z0-9]/ig, '').toUpperCase();
+            let car = registryDB.find(c => c.plate.replace(/[^A-Z0-9]/ig, '').toUpperCase() === searchPlate);
+            let maxW = car ? car.maxW : 200;
+            let currentStatusElement = document.getElementById('ai-status-res').innerText;
+            let dbStatus = currentStatusElement.includes("HỢP LỆ") ? "HỢP LỆ" : "CẢNH BÁO TỪ DB";
+            autoLogInspection(currentScanPlate, "Manual Scan", "Manual Scan", dbStatus, maxW);
+        }
+
+        function exportCSVData() {
+            if(reportLogs.length === 0) return popToast('Báo cáo trống! Cần quét xe trước.', 'err');
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Thoi Gian,Bien So Nhap Can,Mau Bien So,Mau Xe,Trang Thai Vi Pham,Khoi Luong Thuc Te(g),Kich Thuoc Quet (DxRxC)\n";
+            reportLogs.forEach(log => { 
+                let row = `${log.time},${log.plate},${log.plateColor},${log.carColor},${log.status},${log.weight},${log.dims}`;
+                csvContent += row + "\n"; 
+            });
+            let encodedUri = encodeURI(csvContent);
+            let link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `Bao_Cao_Hai_Quan_${todayStr.replace(/\//g,'_')}.csv`);
+            document.body.appendChild(link);
+            link.click(); 
+            document.body.removeChild(link);
+            popToast('Đang tải file Excel Báo cáo về máy tính...', 'suc');
+        }
+
+        function clearLogs() {
+            if(confirm("Hành động này sẽ xóa nhật ký đo lường của ngày hôm nay. Bạn chắc chứ?")) {
+                reportLogs = [];
+                saveDailyReports();
+                renderLogTable();
+                popToast('Đã xóa sạch bộ nhớ Logs trong ngày.', 'suc');
+            }
+        }
+
+        /* ------------------------------------------------------------------
+           LOGIC TƯƠNG TÁC AI CAMERA
+           ------------------------------------------------------------------ */
+        let currentScanPlate = "";
+        let scanStartTime = 0;
+        let hasLogged = false;
+        let missingTicks = 0;
+
+        function fetchAIData() {
+            fetch('http://127.0.0.1:5000/api/ai_data')
+                .then(res => res.json())
+                .then(data => {
+                    if(data.plate !== "----" && data.plate !== "") {
+                        missingTicks = 0; 
+                        let aiPlate = data.plate;
+                        document.getElementById('ai-plate-res').innerText = aiPlate;
+                        let aiCarColor = data.car_color || "Chưa rõ";
+                        let aiPlateColor = data.plate_color || "Chưa rõ";
+                        document.getElementById('ai-color-res').innerHTML = `Màu Xe: <b style="color:var(--sys-primary)">${aiCarColor}</b> | Màu Biển: <b style="color:var(--sys-primary)">${aiPlateColor}</b>`;
+                        
+                        if(aiPlate !== currentScanPlate) {
+                            currentScanPlate = aiPlate;
+                            scanStartTime = Date.now();
+                            hasLogged = false;
+                            document.getElementById('ai-status-res').innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Đang trích xuất...`;
+                        }
+
+                        if(!hasLogged) {
+                            let timeSeen = Date.now() - scanStartTime;
+                            let cleanAIPlate = aiPlate.replace(/[^A-Z0-9]/ig, '').toUpperCase();
+                            let car = registryDB.find(c => c.plate.replace(/[^A-Z0-9]/ig, '').toUpperCase() === cleanAIPlate);
+                            let requiredTime = car ? 2000 : 4000;
+
+                            let statBox = document.getElementById('ai-status-res');
+                            if (timeSeen < requiredTime) {
+                                statBox.innerHTML = `<i class="fa-solid fa-magnifying-glass"></i> Đang phân tích (${Math.floor(timeSeen/1000)}s)...`;
+                                statBox.style.color = 'var(--sys-warning)';
+                            } else {
+                                hasLogged = true;
+                                let maxW = car ? car.maxW : 200; 
+                                let dbStatus = car ? "HỢP LỆ" : "CHƯA ĐĂNG KIỂM";
+                                statBox.innerHTML = car ? `<i class="fa-solid fa-check-circle"></i> KHỚP DB - TẢI: ${maxW}g` : `<i class="fa-solid fa-triangle-exclamation"></i> CẢNH BÁO: ${dbStatus}`;
+                                statBox.style.color = car ? 'var(--sys-success)' : 'var(--sys-danger)';
+                                autoLogInspection(aiPlate, aiCarColor, aiPlateColor, dbStatus, maxW);
+                            }
+                        }
+                    } else {
+                        missingTicks++;
+                        if (missingTicks >= 4) { 
+                            currentScanPlate = ""; hasLogged = false;
+                            document.getElementById('ai-status-res').innerHTML = `Chờ tín hiệu xe...`;
+                            document.getElementById('ai-status-res').style.color = '#64748b';
+                            document.getElementById('ai-plate-res').innerText = "----";
+                        }
+                    }
+                })
+                .catch(() => {});
+        }
+        
+        setInterval(fetchAIData, 1000);
+
+        function demoAIScan() {
+            let laser = document.getElementById('ai-laser');
+            laser.style.display = 'block';
+            setTimeout(() => {
+                laser.style.display = 'none';
+                if(registryDB.length === 0) return popToast('CSDL rỗng!', 'err');
+                let car = registryDB[Math.floor(Math.random() * registryDB.length)];
+                currentScanPlate = car.plate;
+                document.getElementById('ai-plate-res').innerText = car.plate;
+                document.getElementById('ai-status-res').innerHTML = `<i class="fa-solid fa-check-circle"></i> KHỚP DB - TẢI: ${car.maxW}g`;
+                document.getElementById('ai-status-res').style.color = 'var(--sys-success)';
+                autoLogInspection(car.plate, car.carColor, car.plateColor, "HỢP LỆ", car.maxW);
+                popToast('Trích xuất ảnh thành công!', 'suc');
+            }, 2000);
+        }
+
+        window.onload = function() {
+            loadDB(); 
+            loadDailyReports(); 
+        };
+    </script>
+</body>
+</html>
