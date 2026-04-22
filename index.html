@@ -1311,7 +1311,7 @@
             document.getElementById('val_cao').innerText = currC;
 
             let wBox = document.querySelector('.weight-main');
-            if(currW > 200) {
+            if(currW > 20) {
                 wBox.style.background = 'rgba(255,0,85,0.1)'; 
                 wBox.style.borderColor = 'var(--sys-danger)';
                 wBox.querySelector('.sensor-val').style.color = 'var(--sys-danger)';
@@ -1369,7 +1369,7 @@
                 let statusHtml = log.status === "ĐẠT CHUẨN" 
                                  ? `<span style="color:var(--sys-success); font-weight:bold;">ĐẠT CHUẨN</span>` 
                                  : `<span style="color:var(--sys-danger); font-weight:bold;">${log.status}</span>`;
-                let wHtml = `<span style="color:${log.weight > 200 ? 'var(--sys-danger)' : 'var(--sys-success)'}; font-weight:bold;">${log.weight} g</span>`;
+                let wHtml = `<span style="color:${log.weight > 20 ? 'var(--sys-danger)' : 'var(--sys-success)'}; font-weight:bold;">${log.weight} g</span>`;
                 
                 let row = `<tr>
                     <td>${log.time}</td>
